@@ -1,19 +1,23 @@
-Overview of Project:
+Implementation steps:
 
-    AWS VPC, EC2, RDS MySQL and Python Database Application
+1. Provision source - Created or reused an RDS Oracle instance and connected from EC2 using Oracle
+Instant Client SQL*Plus. Populated ADMIN.CUSTOMERS with five test records.
 
-    Designed and deployed a secure AWS database environment using Amazon VPC, EC2, and Amazon RDS MySQL.
+2. Prepare target - Confirmed the Aurora PostgreSQL cluster and writer instance were available. Installed
+psql on EC2, connected to the postgres database, and created the lowercase admin schema/table.
 
-    Configured a custom VPC with public and private subnets across two Availability Zones.
+3. Configure network - Added narrowly scoped database security-group inbound rules to allow access from
+the EC2 security group. Confirmed Oracle TCP 1521 and Aurora PostgreSQL TCP 5432 connectivity.
 
-    Deployed an EC2 Linux instance to provide controlled access to a private RDS MySQL database.
+4. Provision replication - Created a provisioned DMS replication instance in the database VPC and selected
+a compatible subnet group.
 
-    Configured security groups and database subnet groups.
+5. Configure endpoints - Created source and target DMS endpoints and successfully tested both
+connections.
 
-    Created and populated a MySQL customer database.
+6. Create full-load task - Configured a task for migrating existing data, with table mappings for Oracle
+ADMIN.CUSTOMERS and the PostgreSQL admin.customers destination. The table was already created on
+the target.
 
-    Developed and tested a Python application using MySQL Connector/Python to retrieve customer records from Amazon RDS.
-
-    Technologies: AWS VPC, Amazon EC2, Amazon RDS, MySQL, Python, Linux, SSH, IAM, Security Groups.
-
-
+7. Start and validate - Started the DMS task and confirmed five Oracle records were copied into
+PostgreSQL.
